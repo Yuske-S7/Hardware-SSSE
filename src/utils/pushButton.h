@@ -3,9 +3,13 @@
 
 #include <driver/gpio.h>
 #include <stdio.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 
-const int SECONDS_PUSHBUTTON_GPIO_PIN = 35;
-const int MINUTES_PUSHBUTTON_GPIO_PIN = 36;
-const int HOURS_PUSHBUTTON_GPIO_PIN = 39;
+#define SECONDS_PUSHBUTTON_GPIO_PIN 35
+#define MINUTES_PUSHBUTTON_GPIO_PIN 36
+#define HOURS_PUSHBUTTON_GPIO_PIN 39
+
+void trigger_timer(int seconds);
 
 #endif //PUSHBUTTON_H
