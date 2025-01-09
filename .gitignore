@@ -222,6 +222,7 @@ bom/
 .piolibdeps
 .clang_complete
 .gcc-flags.json
+sdkconfig*
 .pio
 
 # Espressif
