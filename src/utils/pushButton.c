@@ -7,7 +7,7 @@ void trigger_timer(int seconds)
                         (1ULL << MINUTES_PUSHBUTTON_GPIO_PIN) |
                         (1ULL << HOURS_PUSHBUTTON_GPIO_PIN),
         .mode = GPIO_MODE_INPUT,
-        .pull_up_en = GPIO_PULLUP_ENABLE,  // Active les résistances pull-up
+        .pull_up_en = GPIO_PULLUP_ENABLE,
         .pull_down_en = GPIO_PULLDOWN_DISABLE,
         .intr_type = GPIO_INTR_DISABLE
     };
