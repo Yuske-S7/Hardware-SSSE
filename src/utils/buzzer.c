@@ -1,6 +1,6 @@
 #include "buzzer.h"
 
-void buzzer_init() {
+int buzzer_init() {
     ledc_timer_config_t ledc_timer = {
         .speed_mode = LEDC_LOW_SPEED_MODE,
         .timer_num = LEDC_TIMER_0,
@@ -8,27 +8,34 @@ void buzzer_init() {
         .freq_hz = BUZZER_PWM_FREQ,
         .clk_cfg = LEDC_AUTO_CLK
     };
-    ledc_timer_config(&ledc_timer);
-
+    if (ledc_timer_config(&ledc_timer) != ESP_OK)
+        return -1;
     ledc_channel_config_t ledc_channel = {
-        .gpio_num = BUZZER_GPIO_PIN,
+        .gpio_num = GPIO_NUM_2,
         .speed_mode = LEDC_LOW_SPEED_MODE,
         .channel = LEDC_CHANNEL_0,
         .timer_sel = LEDC_TIMER_0,
         .duty = 0,
         .hpoint = 0
     };
-    ledc_channel_config(&ledc_channel);
+    if (ledc_channel_config(&ledc_channel) != ESP_OK)
+        return -1;
+    return 0;
 }
 
-void buzzer_start(int duration_ms) {
-    ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 4096); // Duty cycle 50%
-    ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
+int buzzer_start(int duration_ms) {
+    if (ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 4096) != ESP_OK) // Duty cycle 50%
+        return -1;
+    if (ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0) != ESP_OK)
+        return -1;
     vTaskDelay(duration_ms / portTICK_PERIOD_MS);
-    buzzer_stop(); // Arrêter après la durée
+    return buzzer_stop();
 }
 
-void buzzer_stop() {
-    ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 0); // Duty cycle 0%
-    ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
+int buzzer_stop() {
+    if (ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 0) != ESP_OK)    
+        return -1;
+    if (ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0) != ESP_OK)
+        return -1;
+    return 0;
 }

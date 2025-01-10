@@ -30,6 +30,6 @@ void trigger_timer(int seconds)
             printf("Hours push button: (GPIO %d) pressed\n", HOURS_PUSHBUTTON_GPIO_PIN);
             vTaskDelay(200 / portTICK_PERIOD_MS);
         }
-    }
     vTaskDelay(50 / portTICK_PERIOD_MS);
+    }
 }

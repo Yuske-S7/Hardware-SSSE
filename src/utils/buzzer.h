@@ -10,8 +10,9 @@
 #define BUZZER_GPIO_PIN 2 // 24
 #define BUZZER_PWM_FREQ 2000
 
-void buzzer_start(int duration_ms);
-void buzzer_stop(void);
-void buzzer_init();
+
+int buzzer_start(int duration_ms);
+int buzzer_stop(void);
+int buzzer_init();
 
 #endif //BUZZER_H
