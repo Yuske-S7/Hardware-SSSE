@@ -1,4 +1,4 @@
-#include "pushButton.h"
+#include "push_button.h"
 
 static const gpio_num_t button_pins[] = {
     SECONDS_PUSHBUTTON_GPIO_PIN, MINUTES_PUSHBUTTON_GPIO_PIN,
@@ -67,8 +67,7 @@ void trigger_timer() {
     configure_buttons(button_pins,
                       sizeof(button_pins) / sizeof(button_pins[0]));
 
-    button_queue = xQueueCreate(
-        10, sizeof(gpio_num_t));
+    button_queue = xQueueCreate(10, sizeof(gpio_num_t));
     if (button_queue == NULL) {
         printf("Failed to create button queue\n");
         return;
