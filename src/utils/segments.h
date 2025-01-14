@@ -18,6 +18,7 @@
 #define LATCH_SIXTH 15
 
 #define CATHODE 25  // PWD
+#define OUTPUT_ENABLE 0
 
 void segment_init();
 void segment_display_all(int latch_gpio);
