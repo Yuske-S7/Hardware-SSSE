@@ -1,9 +1,9 @@
 #ifndef BUZZER_H
 #define BUZZER_H
 
-#include <driver/adc.h>
 #include <driver/gpio.h>
 #include <driver/ledc.h>
+#include <esp_adc/adc_oneshot.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
