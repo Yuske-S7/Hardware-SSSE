@@ -1,6 +1,10 @@
 #ifndef SEGMENT_H
 #define SEGMENT_H
 
+#include <driver/gpio.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
 #define SEGMENT_GPIO_TOP 16
 #define SEGMENT_GPIO_TOP_LEFT 22
 #define SEGMENT_GPIO_TOP_RIGHT 17
@@ -17,15 +21,18 @@
 #define LATCH_FIFTH 14
 #define LATCH_SIXTH 15
 
-#define CATHODE 25  // PWD
 #define OUTPUT_ENABLE 0
 
-#include <driver/gpio.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
+#define SHORT_DELAY_MS 1
+#define LONG_DELAY_MS 500
 
 void segment_init();
+void segment_display(int latch_gpio, int state);
 void segment_display_all(int latch_gpio);
 void segment_clean_all(int latch_gpio);
+const int* get_latch_gpios();
+int get_latch_gpios_count();
+void segment_display_digit(int latch_gpio, int digit);
+void segment_run_light(int latch_gpio);
 
 #endif  // SEGMENT_H

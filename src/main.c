@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include "utils/buzzer.h"
-#include "utils/pushButton.h"
+#include "utils/push_button.h"
 #include "utils/segments.h"
 #include "utils/state.h"
 
@@ -18,30 +18,18 @@ void app_main(void) {
 
     // 7 segments display
     segment_init();
-    segment_clean_all(LATCH_ONE);
-    segment_clean_all(LATCH_SECOND);
-    segment_clean_all(LATCH_THIRD);
-    segment_clean_all(LATCH_FOURTH);
-    segment_clean_all(LATCH_FIFTH);
-    segment_clean_all(LATCH_SIXTH);
 
-    while (1) {
-        segment_display_all(LATCH_ONE);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-        segment_display_all(LATCH_SECOND);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-        segment_display_all(LATCH_THIRD);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-        segment_display_all(LATCH_FOURTH);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-        segment_display_all(LATCH_FIFTH);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-        segment_display_all(LATCH_SIXTH);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    for (int i = 0; i < get_latch_gpios_count(); i++) {
+        segment_clean_all(get_latch_gpios()[i]);
     }
+
+    segment_run_light(get_latch_gpios()[1]);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+    segment_display_digit(get_latch_gpios()[0], 5);
+    segment_display_digit(get_latch_gpios()[1], 6);
+    segment_display_digit(get_latch_gpios()[2], 7);
+    segment_display_digit(get_latch_gpios()[3], 8);
+    segment_display_digit(get_latch_gpios()[4], 8);
+    segment_display_digit(get_latch_gpios()[5], 9);
 }
