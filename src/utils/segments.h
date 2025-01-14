@@ -20,7 +20,12 @@
 #define CATHODE 25  // PWD
 #define OUTPUT_ENABLE 0
 
+#include <driver/gpio.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
 void segment_init();
 void segment_display_all(int latch_gpio);
+void segment_clean_all(int latch_gpio);
 
 #endif  // SEGMENT_H
