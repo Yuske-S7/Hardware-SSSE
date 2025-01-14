@@ -1,6 +1,5 @@
 #include "segments.h"
 
-// Initialiser les GPIO
 void segment_init() {
     gpio_config_t io_conf = {
         .pin_bit_mask =

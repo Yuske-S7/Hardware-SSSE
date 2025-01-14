@@ -5,11 +5,11 @@ static const gpio_num_t button_pins[] = {
     HOURS_PUSHBUTTON_GPIO_PIN, PLUS_PUSHBUTTON_GPIO_PIN,
     MINUS_PUSHBUTTON_GPIO_PIN};
 
-static const char *button_names[] = {
-    "Seconds push button", "Minutes push button", "Hours push button",
-    "Plus push button", "Minus push button"};
+static const char *button_names[] = {"Seconds push button",
+                                     "Minutes push button", "Hours push button",
+                                     "Plus push button", "Minus push button"};
 
-static QueueHandle_t button_queue; // Queue pour les boutons pressés
+static QueueHandle_t button_queue;
 
 static void configure_buttons(const gpio_num_t *pins, size_t count) {
     uint64_t pin_bit_mask = 0;
@@ -55,24 +55,27 @@ void button_consumer_task(void *pvParameters) {
     gpio_num_t pressed_pin;
 
     while (1) {
-        if (xQueueReceive(button_queue, &pressed_pin, portMAX_DELAY) == pdTRUE) {
+        if (xQueueReceive(button_queue, &pressed_pin, portMAX_DELAY) ==
+            pdTRUE) {
             printf("Button press processed for GPIO %d\n", pressed_pin);
-            // Ajouter ici votre logique pour traiter le bouton pressé
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 }
 
 void trigger_timer() {
-    // Initialiser les boutons et la queue
-    configure_buttons(button_pins, sizeof(button_pins) / sizeof(button_pins[0]));
+    configure_buttons(button_pins,
+                      sizeof(button_pins) / sizeof(button_pins[0]));
 
-    button_queue = xQueueCreate(10, sizeof(gpio_num_t)); // Create queue with space for 10 GPIO values
+    button_queue = xQueueCreate(
+        10, sizeof(gpio_num_t));
     if (button_queue == NULL) {
         printf("Failed to create button queue\n");
         return;
     }
 
-    xTaskCreate(button_task, "Button Task", 4096, (void *)button_pins, 10, NULL);
-    xTaskCreate(button_consumer_task, "Button Consumer Task", 4096, NULL, 10, NULL);
+    xTaskCreate(button_task, "Button Task", 4096, (void *)button_pins, 10,
+                NULL);
+    xTaskCreate(button_consumer_task, "Button Consumer Task", 4096, NULL, 10,
+                NULL);
 }

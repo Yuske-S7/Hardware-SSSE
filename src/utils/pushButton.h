@@ -6,6 +6,7 @@
 #include <freertos/queue.h>
 #include <freertos/task.h>
 #include <stdio.h>
+
 #include "state.h"
 
 #define SECONDS_PUSHBUTTON_GPIO_PIN 35
