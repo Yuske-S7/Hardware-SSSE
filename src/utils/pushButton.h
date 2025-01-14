@@ -2,9 +2,9 @@
 #define PUSHBUTTON_H
 
 #include <driver/gpio.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 #include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 
 #define SECONDS_PUSHBUTTON_GPIO_PIN 35
 #define MINUTES_PUSHBUTTON_GPIO_PIN 36
@@ -12,4 +12,4 @@
 
 void trigger_timer(int seconds);
 
-#endif //PUSHBUTTON_H
+#endif  // PUSHBUTTON_H

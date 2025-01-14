@@ -17,9 +17,9 @@
 #define LATCH_FIFTH 14
 #define LATCH_SIXTH 15
 
-#define CATHODE 34 // PWD
+#define CATHODE 25  // PWD
 
 void segment_init();
 void segment_display_all(int latch_gpio);
 
-#endif // SEGMENT_H
+#endif  // SEGMENT_H
