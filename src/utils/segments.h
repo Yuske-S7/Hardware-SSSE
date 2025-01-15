@@ -33,6 +33,7 @@ void segment_clean_all(int latch_gpio);
 const int* get_latch_gpios();
 int get_latch_gpios_count();
 void segment_display_digit(int latch_gpio, int digit);
+void segment_display_char(int latch_gpio, char character);
 void segment_run_light(int latch_gpio);
 
 #endif  // SEGMENT_H

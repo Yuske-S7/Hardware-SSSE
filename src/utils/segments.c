@@ -131,6 +131,73 @@ void segment_display_digit(int latch_gpio, int digit) {
     gpio_set_level(OUTPUT_ENABLE, 0);
 }
 
+void segment_display_char(int latch_gpio, char character) {
+    segment_clean_all(latch_gpio);
+
+    if (character == 'H') {
+        gpio_set_level(SEGMENT_GPIO_TOP_RIGHT, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_RIGHT, 1);
+        gpio_set_level(SEGMENT_GPIO_MID, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_LEFT, 1);
+    } else if (character == 'M') {
+        gpio_set_level(SEGMENT_GPIO_TOP_RIGHT, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_RIGHT, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_LEFT, 1);
+    } else if (character == 'N') {
+        gpio_set_level(SEGMENT_GPIO_TOP, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_RIGHT, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_RIGHT, 1);
+    } else if (character == 'S') {
+        gpio_set_level(SEGMENT_GPIO_TOP, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_MID, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_RIGHT, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT, 1);
+    } else if (character == 'P') {
+        gpio_set_level(SEGMENT_GPIO_TOP, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_RIGHT, 1);
+        gpio_set_level(SEGMENT_GPIO_MID, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_LEFT, 1);
+    } else if (character == 'R') {
+        gpio_set_level(SEGMENT_GPIO_TOP, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_RIGHT, 1);
+        gpio_set_level(SEGMENT_GPIO_MID, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_RIGHT, 1);
+    } else if (character == 'F') {
+        gpio_set_level(SEGMENT_GPIO_TOP, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_MID, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_LEFT, 1);
+    } else if (character == 'E') {
+        gpio_set_level(SEGMENT_GPIO_TOP, 1);
+        gpio_set_level(SEGMENT_GPIO_TOP_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_MID, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT_LEFT, 1);
+        gpio_set_level(SEGMENT_GPIO_BOT, 1);
+    } else if (character == '-') {
+        gpio_set_level(SEGMENT_GPIO_MID, 1);
+    } else if (character == '.') {
+        gpio_set_level(SEGMENT_GPIO_POINT, 1);
+    } else {
+        printf("Invalid character: %c\n", character);
+        return;
+    }
+
+    gpio_set_level(latch_gpio, 1);
+    vTaskDelay(SHORT_DELAY_MS / portTICK_PERIOD_MS);
+    gpio_set_level(latch_gpio, 0);
+
+    gpio_set_level(OUTPUT_ENABLE, 0);
+}
+
 void segment_run_light(int latch_gpio) {
     const int sequence[] = {SEGMENT_GPIO_TOP,       SEGMENT_GPIO_TOP_RIGHT,
                             SEGMENT_GPIO_BOT_RIGHT, SEGMENT_GPIO_BOT,
