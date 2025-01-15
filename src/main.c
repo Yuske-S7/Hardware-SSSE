@@ -13,8 +13,8 @@ void app_main(void) {
     }
     printf("Buzzer arrêté.\n");
 
-    /* TODO : add condition => test mode or normal mode*/
+    /* TODO : add condition => test mode or normal mode */
 
     // Test mode
-    test_mode();
+    test_display();
 }

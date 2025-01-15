@@ -1,6 +1,6 @@
 #include "test_mode.h"
 
-void test_mode() {
+void test_display() {
     segment_init();
 
     for (int i = 0; i < get_latch_gpios_count(); i++) {
@@ -16,4 +16,8 @@ void test_mode() {
         vTaskDelay(DELAY_MS / portTICK_PERIOD_MS);
         segment_clean_all(get_latch_gpios()[i]);
     }
+}
+
+void test_push_button() {
+
 }

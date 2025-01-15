@@ -8,6 +8,7 @@
 
 #define DELAY_MS 200
 
-void test_mode();
+void test_display();
+void test_push_button();
 
 #endif  // TEST_MODE_H
