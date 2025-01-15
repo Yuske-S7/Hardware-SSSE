@@ -7,16 +7,12 @@
 #include <freertos/task.h>
 #include <stdio.h>
 
-#include "state.h"
-
 #define SECONDS_PUSHBUTTON_GPIO_PIN 35
 #define MINUTES_PUSHBUTTON_GPIO_PIN 36
 #define HOURS_PUSHBUTTON_GPIO_PIN 39
 
 #define PLUS_PUSHBUTTON_GPIO_PIN 4
 #define MINUS_PUSHBUTTON_GPIO_PIN 5
-
-#define DELAY_MS 100
 
 void trigger_timer();
 

@@ -50,31 +50,42 @@ static bool are_buttons_pressed(const gpio_num_t *pins, size_t count,
                   // spécifié
 }
 
-void simultaneous_button_task(void *pvParameters) {
+void simultaneous_button_task(TaskHandle_t task_to_cut) {
     const gpio_num_t monitored_buttons[] = {HOURS_PUSHBUTTON_GPIO_PIN,
                                             MINUTES_PUSHBUTTON_GPIO_PIN,
                                             SECONDS_PUSHBUTTON_GPIO_PIN};
     size_t monitored_count =
         sizeof(monitored_buttons) / sizeof(monitored_buttons[0]);
 
+    int cpt = 0;
+
     while (1) {
         if (are_buttons_pressed(monitored_buttons, monitored_count,
-                                DELAY_MS / portTICK_PERIOD_MS)) {
+                                100 / portTICK_PERIOD_MS)) {
             printf(
                 "Hours, Minutes, and Seconds buttons pressed simultaneously "
                 "for %d ms\n",
-                DELAY_MS);
+                100);
             // Action à effectuer lorsque les boutons sont détectés
+            if (task_to_cut != NULL)
+            {
+                vTaskDelete(task_to_cut);
+                task_to_cut = NULL;
+            }
         }
 
         vTaskDelay(50 / portTICK_PERIOD_MS);  // Délai entre les vérifications
+        cpt++;
+        if (cpt == 120){
+            vTaskDelete(NULL);
+        }
+
     }
 }
 
-void trigger_timer() {
+void trigger_timer(TaskHandle_t xBUZZER_HANDLER) {
     configure_buttons(button_pins,
                       sizeof(button_pins) / sizeof(button_pins[0]));
 
-    xTaskCreate(simultaneous_button_task, "Simultaneous Button Task", 4096,
-                NULL, 10, NULL);
+    simultaneous_button_task(xBUZZER_HANDLER);
 }
