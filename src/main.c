@@ -12,4 +12,6 @@ void app_main(void) {
     xTaskCreate(buzzer_on_tension, "buzzer_on_tension", 2048, NULL, 5, NULL);
     /* TODO : add condition => test mode or normal mode */
 
+    trigger_timer();
+
 }

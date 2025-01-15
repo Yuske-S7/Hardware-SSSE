@@ -25,41 +25,49 @@ static void configure_buttons(const gpio_num_t *pins, size_t count) {
     gpio_config(&io_conf);
 }
 
-static void check_button_press(const gpio_num_t pin, const char *name) {
-    if (gpio_get_level(pin) == 0) {
-        // Envoyer le GPIO dans la queue
-        if (button_queue != NULL) {
-            if (xQueueSend(button_queue, &pin, 0) == pdTRUE) {
-                printf("%s: (GPIO %d) pressed, sent to queue\n", name, pin);
-            } else {
-                printf("Queue full! Could not enqueue button press.\n");
+static bool are_buttons_pressed(const gpio_num_t *pins, size_t count,
+                                TickType_t delay_ticks) {
+    TickType_t start_time = xTaskGetTickCount();
+
+    while ((xTaskGetTickCount() - start_time) < delay_ticks) {
+        bool all_pressed = true;
+
+        for (size_t i = 0; i < count; ++i) {
+            if (gpio_get_level(pins[i]) != 0) {  // Bouton relâché
+                all_pressed = false;
+                break;
             }
         }
-        vTaskDelay(200 / portTICK_PERIOD_MS);
+
+        if (!all_pressed) {
+            return false;  // Si un bouton est relâché, sortir immédiatement
+        }
+        vTaskDelay(10 / portTICK_PERIOD_MS);  // Petit délai pour éviter une
+                                              // boucle trop rapide
     }
+
+    return true;  // Tous les boutons sont restés appuyés pendant le délai
+                  // spécifié
 }
 
-void button_task(void *pvParameters) {
-    const gpio_num_t *pins = (gpio_num_t *)pvParameters;
-    size_t count = sizeof(button_pins) / sizeof(button_pins[0]);
+void simultaneous_button_task(void *pvParameters) {
+    const gpio_num_t monitored_buttons[] = {HOURS_PUSHBUTTON_GPIO_PIN,
+                                            MINUTES_PUSHBUTTON_GPIO_PIN,
+                                            SECONDS_PUSHBUTTON_GPIO_PIN};
+    size_t monitored_count =
+        sizeof(monitored_buttons) / sizeof(monitored_buttons[0]);
 
     while (1) {
-        for (size_t i = 0; i < count; ++i) {
-            check_button_press(pins[i], button_names[i]);
+        if (are_buttons_pressed(monitored_buttons, monitored_count,
+                                DELAY_MS / portTICK_PERIOD_MS)) {
+            printf(
+                "Hours, Minutes, and Seconds buttons pressed simultaneously "
+                "for %d ms\n",
+                DELAY_MS);
+            // Action à effectuer lorsque les boutons sont détectés
         }
-        vTaskDelay(50 / portTICK_PERIOD_MS);
-    }
-}
 
-void button_consumer_task(void *pvParameters) {
-    gpio_num_t pressed_pin;
-
-    while (1) {
-        if (xQueueReceive(button_queue, &pressed_pin, portMAX_DELAY) ==
-            pdTRUE) {
-            printf("Button press processed for GPIO %d\n", pressed_pin);
-        }
-        vTaskDelay(10 / portTICK_PERIOD_MS);
+        vTaskDelay(50 / portTICK_PERIOD_MS);  // Délai entre les vérifications
     }
 }
 
@@ -67,14 +75,6 @@ void trigger_timer() {
     configure_buttons(button_pins,
                       sizeof(button_pins) / sizeof(button_pins[0]));
 
-    button_queue = xQueueCreate(10, sizeof(gpio_num_t));
-    if (button_queue == NULL) {
-        printf("Failed to create button queue\n");
-        return;
-    }
-
-    xTaskCreate(button_task, "Button Task", 4096, (void *)button_pins, 10,
-                NULL);
-    xTaskCreate(button_consumer_task, "Button Consumer Task", 4096, NULL, 10,
-                NULL);
+    xTaskCreate(simultaneous_button_task, "Simultaneous Button Task", 4096,
+                NULL, 10, NULL);
 }

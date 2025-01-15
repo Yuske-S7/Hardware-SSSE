@@ -16,6 +16,8 @@
 #define PLUS_PUSHBUTTON_GPIO_PIN 4
 #define MINUS_PUSHBUTTON_GPIO_PIN 5
 
+#define DELAY_MS 100
+
 void trigger_timer();
 
 #endif  // PUSHBUTTON_H
