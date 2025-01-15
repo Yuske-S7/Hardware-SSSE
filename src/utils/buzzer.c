@@ -17,14 +17,19 @@ int buzzer_init() {
     return 0;
 }
 
-int buzzer_start(int duration_ms) {
-    if (ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 4096) !=
-        ESP_OK)  // Duty cycle 50%
-        return -1;
-    if (ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0) != ESP_OK)
-        return -1;
+void buzzer_start(int duration_ms) {
+    ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 4096);
+    ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
     vTaskDelay(duration_ms / portTICK_PERIOD_MS);
-    return buzzer_stop();
+    buzzer_stop();
+}
+
+void buzzer_on_tension() {
+    for (int i = 0; i < 4; i++) {
+        buzzer_start(1000);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
+    }
+    vTaskDelete(NULL);
 }
 
 int buzzer_stop() {
