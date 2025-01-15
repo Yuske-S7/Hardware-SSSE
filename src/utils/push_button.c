@@ -5,12 +5,6 @@ static const gpio_num_t button_pins[] = {
     HOURS_PUSHBUTTON_GPIO_PIN, PLUS_PUSHBUTTON_GPIO_PIN,
     MINUS_PUSHBUTTON_GPIO_PIN};
 
-static const char *button_names[] = {"Seconds push button",
-                                     "Minutes push button", "Hours push button",
-                                     "Plus push button", "Minus push button"};
-
-static QueueHandle_t button_queue;
-
 static void configure_buttons(const gpio_num_t *pins, size_t count) {
     uint64_t pin_bit_mask = 0;
     for (size_t i = 0; i < count; ++i) {
@@ -33,21 +27,19 @@ static bool are_buttons_pressed(const gpio_num_t *pins, size_t count,
         bool all_pressed = true;
 
         for (size_t i = 0; i < count; ++i) {
-            if (gpio_get_level(pins[i]) != 0) {  // Bouton relâché
+            if (gpio_get_level(pins[i]) != 0) {
                 all_pressed = false;
                 break;
             }
         }
 
         if (!all_pressed) {
-            return false;  // Si un bouton est relâché, sortir immédiatement
+            return false;
         }
-        vTaskDelay(10 / portTICK_PERIOD_MS);  // Petit délai pour éviter une
-                                              // boucle trop rapide
+        vTaskDelay(10 / portTICK_PERIOD_MS);
     }
 
-    return true;  // Tous les boutons sont restés appuyés pendant le délai
-                  // spécifié
+    return true;
 }
 
 void simultaneous_button_task(TaskHandle_t task_to_cut) {
@@ -66,20 +58,17 @@ void simultaneous_button_task(TaskHandle_t task_to_cut) {
                 "Hours, Minutes, and Seconds buttons pressed simultaneously "
                 "for %d ms\n",
                 100);
-            // Action à effectuer lorsque les boutons sont détectés
-            if (task_to_cut != NULL)
-            {
+            if (task_to_cut != NULL) {
                 vTaskDelete(task_to_cut);
                 task_to_cut = NULL;
             }
         }
 
-        vTaskDelay(50 / portTICK_PERIOD_MS);  // Délai entre les vérifications
+        vTaskDelay(50 / portTICK_PERIOD_MS);
         cpt++;
-        if (cpt == 120){
+        if (cpt == 120) {
             vTaskDelete(NULL);
         }
-
     }
 }
 
