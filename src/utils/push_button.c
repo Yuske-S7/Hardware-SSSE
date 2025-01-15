@@ -1,4 +1,5 @@
 #include "push_button.h"
+#include "../test_mode/test_mode.h"
 
 static const gpio_num_t button_pins[] = {
     SECONDS_PUSHBUTTON_GPIO_PIN, MINUTES_PUSHBUTTON_GPIO_PIN,
@@ -61,6 +62,8 @@ void simultaneous_button_task(TaskHandle_t task_to_cut) {
             if (task_to_cut != NULL) {
                 vTaskDelete(task_to_cut);
                 task_to_cut = NULL;
+                buzzer_stop();
+                xTaskCreate(test_display, "chenillard", 2048, NULL, 5, NULL);
             }
         }
 

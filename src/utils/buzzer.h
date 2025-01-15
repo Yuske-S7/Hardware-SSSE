@@ -14,5 +14,6 @@ void buzzer_start(int duration_ms);
 int buzzer_stop(void);
 int buzzer_init();
 void buzzer_on_tension();
+void buzzer_waiting();
 
 #endif  // BUZZER_H

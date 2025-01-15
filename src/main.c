@@ -10,7 +10,6 @@ void app_main(void) {
 
     TaskHandle_t xBUZZER_HANDLER = NULL;
 
-    xTaskCreate(test_display, "chenillard", 2048, NULL, 5, NULL);
     xTaskCreate(buzzer_on_tension, "buzzer_on_tension", 2048, NULL, 5, &xBUZZER_HANDLER);
     /* TODO : add condition => test mode or normal mode */
 

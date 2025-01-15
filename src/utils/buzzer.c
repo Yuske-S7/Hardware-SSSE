@@ -32,6 +32,14 @@ void buzzer_on_tension() {
     vTaskDelete(NULL);
 }
 
+void buzzer_waiting() {
+    while (true) {
+        buzzer_start(1000);
+        vTaskDelay(500 / portTICK_PERIOD_MS);
+    }
+    vTaskDelete(NULL);
+}
+
 int buzzer_stop() {
     if (ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 0) != ESP_OK)
         return -1;
