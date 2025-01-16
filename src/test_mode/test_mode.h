@@ -5,7 +5,7 @@
 #include "../utils/push_button.h"
 #include "../utils/segments.h"
 #include "../normal_mode/normal_mode.h"
-#include "../utils/imperial_march"
+#include "../utils/imperial_march.h"
 #define DELAY_MS 200
 
 void test_display();
