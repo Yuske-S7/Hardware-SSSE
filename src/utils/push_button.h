@@ -15,5 +15,6 @@
 #define MINUS_PUSHBUTTON_GPIO_PIN 5
 
 void trigger_timer();
+void simultaneous_button_task_mode_test(void *pvParameters);
 
 #endif  // PUSHBUTTON_H

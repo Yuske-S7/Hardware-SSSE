@@ -22,6 +22,7 @@
 #define LATCH_SIXTH 15
 
 #define OUTPUT_ENABLE 0
+#define CATHODE 25
 
 #define SHORT_DELAY_MS 1
 #define LONG_DELAY_MS 500

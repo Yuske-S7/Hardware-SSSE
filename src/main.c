@@ -7,6 +7,7 @@ void app_main(void) {
     // Buzzer
     buzzer_init();
     segment_init();
+    printf("Init done");
 
     TaskHandle_t xBUZZER_HANDLER = NULL;
 

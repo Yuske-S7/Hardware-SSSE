@@ -75,6 +75,46 @@ void simultaneous_button_task(TaskHandle_t task_to_cut) {
     }
 }
 
+void simultaneous_button_task_mode_test(void *pvParameters) {
+    TaskHandle_t task_to_cut = (TaskHandle_t)pvParameters;
+    const gpio_num_t monitored_buttons[] = {PLUS_PUSHBUTTON_GPIO_PIN,
+                                            MINUS_PUSHBUTTON_GPIO_PIN };
+    size_t monitored_count =
+        sizeof(monitored_buttons) / sizeof(monitored_buttons[0]);
+
+    int cpt = 0;
+
+    while (1) {
+        if (are_buttons_pressed(monitored_buttons, monitored_count,
+                                100 / portTICK_PERIOD_MS)) {
+            printf(
+                "Hours, Minutes, and Seconds buttons pressed simultaneously "
+                "for %d ms\n",
+                100);
+            if (task_to_cut != NULL) {
+                vTaskDelete(task_to_cut);
+                task_to_cut = NULL;
+                buzzer_stop();
+                segment_clean_all(LATCH_ONE);
+                segment_clean_all(LATCH_SECOND);
+                segment_clean_all(LATCH_THIRD);
+                segment_clean_all(LATCH_FOURTH);
+                segment_clean_all(LATCH_FIFTH);
+                segment_clean_all(LATCH_SIXTH);
+                buzzer_start(200);
+                vTaskDelay(50 / portTICK_PERIOD_MS); 
+                buzzer_stop();
+                vTaskDelay(50 / portTICK_PERIOD_MS); 
+                buzzer_start(200);
+                vTaskDelay(50 / portTICK_PERIOD_MS); 
+                buzzer_stop();
+                printf("lancer le mode normal");
+            }
+        }
+        vTaskDelay(50 / portTICK_PERIOD_MS); 
+    }
+}
+
 void trigger_timer(TaskHandle_t xBUZZER_HANDLER) {
     configure_buttons(button_pins,
                       sizeof(button_pins) / sizeof(button_pins[0]));
