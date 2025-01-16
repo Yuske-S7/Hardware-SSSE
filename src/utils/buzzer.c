@@ -33,20 +33,22 @@ void buzzer_play_imperial_march(void) {
         if (divider > 0) {
             noteDuration = wholenote / divider;
         } else if (divider < 0) {
-            noteDuration = wholenote / -divider * 1.5;
+            noteDuration = (wholenote / -divider) * 1.5;
         }
 
         if (melody[thisNote] == REST) {
             buzzer_stop();
         } else {
             ledc_set_freq(LEDC_LOW_SPEED_MODE, LEDC_TIMER_0, melody[thisNote]);
-            buzzer_start(noteDuration * 0.9);
+            ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 4096);
+            ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
+            vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.9));
+            buzzer_stop();
         }
 
-        vTaskDelay((noteDuration * 0.1) / portTICK_PERIOD_MS);
+        vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.1));
     }
 }
-
 void buzzer_on_tension() {
     for (int i = 0; i < 4; i++) {
         buzzer_start(1000);
