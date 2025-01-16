@@ -50,7 +50,7 @@ int buzzer_stop() {
 }
 
 // void buzzer_play_imperial_march(void) {
-//     int wholenote = (60000 * 4) / tempo;
+//     int wholenote = (60000 * 4) / TEMPO;
 //     int divider = 0, noteDuration = 0;
 //
 //     for (int thisNote = 0; thisNote < notes * 2; thisNote += 2) {

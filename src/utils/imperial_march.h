@@ -96,7 +96,7 @@
 //// Define melody and tempo
 // #define TEMPO 120
 //
-// int melody[] = {
+// static const int melody[] = {
 //     NOTE_A4, -4, NOTE_A4, -4, NOTE_A4, 16, NOTE_A4, 16, NOTE_A4, 16, NOTE_A4,
 //     16, NOTE_F4, 8, REST, 8, NOTE_A4, -4, NOTE_A4, -4, NOTE_A4, 16, NOTE_A4,
 //     16, NOTE_A4, 16, NOTE_A4, 16, NOTE_F4, 8, REST, 8, NOTE_A4, 4, NOTE_A4,
@@ -106,6 +106,6 @@
 // };
 //
 //// Calculate the number of notes in the melody
-// const int notes = sizeof(melody) / sizeof(melody[0]) / 2;
+// static const int notes = sizeof(melody) / sizeof(melody[0]) / 2;
 //
 // #endif  // IMPERIAL_MARCH_H
