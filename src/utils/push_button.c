@@ -101,13 +101,19 @@ void simultaneous_button_task_mode_test(void *pvParameters) {
                 segment_clean_all(LATCH_FOURTH);
                 segment_clean_all(LATCH_FIFTH);
                 segment_clean_all(LATCH_SIXTH);
-                buzzer_start(200);
+                buzzer_start(1000);
                 vTaskDelay(50 / portTICK_PERIOD_MS); 
                 buzzer_stop();
                 vTaskDelay(50 / portTICK_PERIOD_MS); 
-                buzzer_start(200);
+                buzzer_start(1000);
                 vTaskDelay(50 / portTICK_PERIOD_MS); 
                 buzzer_stop();
+                segment_display_char(LATCH_ONE, '.');
+                segment_display_char(LATCH_SECOND, '.');
+                segment_display_char(LATCH_THIRD, '.');
+                segment_display_char(LATCH_FOURTH, '.');
+                segment_display_char(LATCH_FIFTH, '.');
+                segment_display_char(LATCH_SIXTH, '.');
                 printf("lancer le mode normal");
             }
         }
