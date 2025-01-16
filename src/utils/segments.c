@@ -1,4 +1,5 @@
 #include "segments.h"
+
 #include <driver/ledc.h>
 
 static const int segment_gpios[] = {
@@ -29,7 +30,6 @@ void segment_init() {
     gpio_config(&io_conf);
 
     gpio_set_level(OUTPUT_ENABLE, 1);
-
 }
 
 void segment_display(int latch_gpio, int state) {

@@ -1,10 +1,6 @@
 #include "push_button.h"
-#include "../test_mode/test_mode.h"
 
-static const gpio_num_t button_pins[] = {
-    SECONDS_PUSHBUTTON_GPIO_PIN, MINUTES_PUSHBUTTON_GPIO_PIN,
-    HOURS_PUSHBUTTON_GPIO_PIN, PLUS_PUSHBUTTON_GPIO_PIN,
-    MINUS_PUSHBUTTON_GPIO_PIN};
+#include "../test_mode/test_mode.h"
 
 static void configure_buttons(const gpio_num_t *pins, size_t count) {
     uint64_t pin_bit_mask = 0;
@@ -43,6 +39,19 @@ static bool are_buttons_pressed(const gpio_num_t *pins, size_t count,
     return true;
 }
 
+static bool is_button_pressed(gpio_num_t pin, TickType_t delay_ticks) {
+    TickType_t start_time = xTaskGetTickCount();
+
+    while ((xTaskGetTickCount() - start_time) < delay_ticks) {
+        if (gpio_get_level(pin) == 0) {
+            return true;
+        }
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+
+    return false;
+}
+
 void simultaneous_button_task(TaskHandle_t task_to_cut) {
     const gpio_num_t monitored_buttons[] = {HOURS_PUSHBUTTON_GPIO_PIN,
                                             MINUTES_PUSHBUTTON_GPIO_PIN,
@@ -71,7 +80,8 @@ void simultaneous_button_task(TaskHandle_t task_to_cut) {
         cpt++;
         if (cpt == 120) {
             printf("calling normal mode");
-            xTaskCreate(entry_normal_mode, "noraml mode from normal", 2048, NULL, 5, NULL);
+            xTaskCreate(entry_normal_mode, "noraml mode from normal", 2048,
+                        NULL, 5, NULL);
             vTaskDelete(NULL);
         }
     }
@@ -80,7 +90,7 @@ void simultaneous_button_task(TaskHandle_t task_to_cut) {
 void simultaneous_button_task_mode_test(void *pvParameters) {
     TaskHandle_t task_to_cut = (TaskHandle_t)pvParameters;
     const gpio_num_t monitored_buttons[] = {PLUS_PUSHBUTTON_GPIO_PIN,
-                                            MINUS_PUSHBUTTON_GPIO_PIN };
+                                            MINUS_PUSHBUTTON_GPIO_PIN};
     size_t monitored_count =
         sizeof(monitored_buttons) / sizeof(monitored_buttons[0]);
 
@@ -102,11 +112,11 @@ void simultaneous_button_task_mode_test(void *pvParameters) {
                 segment_clean_all(LATCH_FIFTH);
                 segment_clean_all(LATCH_SIXTH);
                 buzzer_start(1000);
-                vTaskDelay(50 / portTICK_PERIOD_MS); 
+                vTaskDelay(50 / portTICK_PERIOD_MS);
                 buzzer_stop();
-                vTaskDelay(50 / portTICK_PERIOD_MS); 
+                vTaskDelay(50 / portTICK_PERIOD_MS);
                 buzzer_start(1000);
-                vTaskDelay(50 / portTICK_PERIOD_MS); 
+                vTaskDelay(50 / portTICK_PERIOD_MS);
                 buzzer_stop();
                 segment_display_char(LATCH_ONE, '.');
                 segment_display_char(LATCH_SECOND, '.');
@@ -114,11 +124,12 @@ void simultaneous_button_task_mode_test(void *pvParameters) {
                 segment_display_char(LATCH_FOURTH, '.');
                 segment_display_char(LATCH_FIFTH, '.');
                 segment_display_char(LATCH_SIXTH, '.');
-                xTaskCreate(entry_normal_mode, "noraml mode from test", 2048, NULL, 5, NULL);
+                xTaskCreate(entry_normal_mode, "noraml mode from test", 2048,
+                            NULL, 5, NULL);
                 printf("lancer le mode normal");
             }
         }
-        vTaskDelay(50 / portTICK_PERIOD_MS); 
+        vTaskDelay(50 / portTICK_PERIOD_MS);
     }
 }
 
