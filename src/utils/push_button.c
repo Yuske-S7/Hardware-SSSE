@@ -70,6 +70,8 @@ void simultaneous_button_task(TaskHandle_t task_to_cut) {
         vTaskDelay(50 / portTICK_PERIOD_MS);
         cpt++;
         if (cpt == 120) {
+            printf("calling normal mode");
+            xTaskCreate(entry_normal_mode, "noraml mode from normal", 2048, NULL, 5, NULL);
             vTaskDelete(NULL);
         }
     }
@@ -81,8 +83,6 @@ void simultaneous_button_task_mode_test(void *pvParameters) {
                                             MINUS_PUSHBUTTON_GPIO_PIN };
     size_t monitored_count =
         sizeof(monitored_buttons) / sizeof(monitored_buttons[0]);
-
-    int cpt = 0;
 
     while (1) {
         if (are_buttons_pressed(monitored_buttons, monitored_count,
@@ -127,6 +127,4 @@ void trigger_timer(TaskHandle_t xBUZZER_HANDLER) {
                       sizeof(button_pins) / sizeof(button_pins[0]));
 
     simultaneous_button_task(xBUZZER_HANDLER);
-    xTaskCreate(entry_normal_mode, "noraml mode from normal", 2048, NULL, 5, NULL);
-    vTaskDelete(NULL);
 }

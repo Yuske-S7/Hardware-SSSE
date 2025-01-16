@@ -14,7 +14,7 @@
 #define PLUS_PUSHBUTTON_GPIO_PIN 4
 #define MINUS_PUSHBUTTON_GPIO_PIN 5
 
-void trigger_timer();
+void trigger_timer(TaskHandle_t xBUZZER_HANDLER);
 void simultaneous_button_task_mode_test(void *pvParameters);
 
 #endif  // PUSHBUTTON_H
