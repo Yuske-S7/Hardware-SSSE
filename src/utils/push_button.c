@@ -2,7 +2,7 @@
 
 #include "../test_mode/test_mode.h"
 
-static void configure_buttons(const gpio_num_t *pins, size_t count) {
+void configure_buttons(const gpio_num_t *pins, size_t count) {
     uint64_t pin_bit_mask = 0;
     for (size_t i = 0; i < count; ++i) {
         pin_bit_mask |= (1ULL << pins[i]);
@@ -16,8 +16,8 @@ static void configure_buttons(const gpio_num_t *pins, size_t count) {
     gpio_config(&io_conf);
 }
 
-static bool are_buttons_pressed(const gpio_num_t *pins, size_t count,
-                                TickType_t delay_ticks) {
+bool are_buttons_pressed(const gpio_num_t *pins, size_t count,
+                         TickType_t delay_ticks) {
     TickType_t start_time = xTaskGetTickCount();
 
     while ((xTaskGetTickCount() - start_time) < delay_ticks) {
@@ -39,7 +39,7 @@ static bool are_buttons_pressed(const gpio_num_t *pins, size_t count,
     return true;
 }
 
-static bool is_button_pressed(gpio_num_t pin, TickType_t delay_ticks) {
+bool is_button_pressed(gpio_num_t pin, TickType_t delay_ticks) {
     TickType_t start_time = xTaskGetTickCount();
 
     while ((xTaskGetTickCount() - start_time) < delay_ticks) {
@@ -133,9 +133,9 @@ void simultaneous_button_task_mode_test(void *pvParameters) {
     }
 }
 
-void trigger_timer(TaskHandle_t xBUZZER_HANDLER) {
+void trigger_timer(void *pvParameters) {
+    TaskHandle_t xBUZZER_HANDLER = (TaskHandle_t)pvParameters;
     configure_buttons(button_pins,
                       sizeof(button_pins) / sizeof(button_pins[0]));
-
     simultaneous_button_task(xBUZZER_HANDLER);
 }

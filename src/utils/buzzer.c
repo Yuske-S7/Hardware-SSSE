@@ -1,4 +1,5 @@
 #include "buzzer.h"
+
 #include "imperial_march.h"
 int buzzer_init() {
     ledc_timer_config_t ledc_timer = {.speed_mode = LEDC_LOW_SPEED_MODE,
@@ -24,31 +25,6 @@ void buzzer_start(int duration_ms) {
     buzzer_stop();
 }
 
-void buzzer_play_imperial_march(void) {
-    int wholenote = (60000 * 4) / tempo;
-    int divider = 0, noteDuration = 0;
-
-    for (int thisNote = 0; thisNote < notes * 2; thisNote += 2) {
-        divider = melody[thisNote + 1];
-        if (divider > 0) {
-            noteDuration = wholenote / divider;
-        } else if (divider < 0) {
-            noteDuration = (wholenote / -divider) * 1.5;
-        }
-
-        if (melody[thisNote] == REST) {
-            buzzer_stop();
-        } else {
-            ledc_set_freq(LEDC_LOW_SPEED_MODE, LEDC_TIMER_0, melody[thisNote]);
-            ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 4096);
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
-            vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.9));
-            buzzer_stop();
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.1));
-    }
-}
 void buzzer_on_tension() {
     for (int i = 0; i < 4; i++) {
         buzzer_start(1000);
@@ -72,3 +48,29 @@ int buzzer_stop() {
         return -1;
     return 0;
 }
+
+// void buzzer_play_imperial_march(void) {
+//     int wholenote = (60000 * 4) / tempo;
+//     int divider = 0, noteDuration = 0;
+//
+//     for (int thisNote = 0; thisNote < notes * 2; thisNote += 2) {
+//         divider = melody[thisNote + 1];
+//         if (divider > 0) {
+//             noteDuration = wholenote / divider;
+//         } else if (divider < 0) {
+//             noteDuration = (wholenote / -divider) * 1.5;
+//         }
+//
+//         if (melody[thisNote] == REST) {
+//             buzzer_stop();
+//         } else {
+//             ledc_set_freq(LEDC_LOW_SPEED_MODE, LEDC_TIMER_0,
+//             melody[thisNote]); ledc_set_duty(LEDC_LOW_SPEED_MODE,
+//             LEDC_CHANNEL_0, 4096); ledc_update_duty(LEDC_LOW_SPEED_MODE,
+//             LEDC_CHANNEL_0); vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.9));
+//             buzzer_stop();
+//         }
+//
+//         vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.1));
+//     }
+// }
