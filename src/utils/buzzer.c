@@ -1,5 +1,5 @@
 #include "buzzer.h"
-
+#include "imperial_march.h"
 int buzzer_init() {
     ledc_timer_config_t ledc_timer = {.speed_mode = LEDC_LOW_SPEED_MODE,
                                       .timer_num = LEDC_TIMER_0,
@@ -22,6 +22,29 @@ void buzzer_start(int duration_ms) {
     ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
     vTaskDelay(duration_ms / portTICK_PERIOD_MS);
     buzzer_stop();
+}
+
+void buzzer_play_imperial_march(void) {
+    int wholenote = (60000 * 4) / tempo;
+    int divider = 0, noteDuration = 0;
+
+    for (int thisNote = 0; thisNote < notes * 2; thisNote += 2) {
+        divider = melody[thisNote + 1];
+        if (divider > 0) {
+            noteDuration = wholenote / divider;
+        } else if (divider < 0) {
+            noteDuration = wholenote / -divider * 1.5;
+        }
+
+        if (melody[thisNote] == REST) {
+            buzzer_stop();
+        } else {
+            ledc_set_freq(LEDC_LOW_SPEED_MODE, LEDC_TIMER_0, melody[thisNote]);
+            buzzer_start(noteDuration * 0.9);
+        }
+
+        vTaskDelay((noteDuration * 0.1) / portTICK_PERIOD_MS);
+    }
 }
 
 void buzzer_on_tension() {

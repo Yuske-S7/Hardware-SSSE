@@ -15,5 +15,6 @@ int buzzer_stop(void);
 int buzzer_init();
 void buzzer_on_tension();
 void buzzer_waiting();
+void buzzer_play_imperial_march(void);
 
 #endif  // BUZZER_H
