@@ -9,7 +9,10 @@ struct dtime {
     unsigned seconds;
 };
 
-void save_dtime(struct dtime *dt);
+void save_dtime_hours(struct dtime *dt, bool is_increment);
 void simultaneous_button_time_setting(void *pvParameters, struct dtime *dt);
+void save_dtime_minutes(struct dtime *dt, bool is_increment);
+void save_dtime_seconds(struct dtime *dt, bool is_increment);
+void detect_h_button_task(void *pvParameters);
 
 #endif  // DISPLAY_TIMER_H

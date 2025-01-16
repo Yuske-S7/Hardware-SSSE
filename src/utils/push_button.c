@@ -39,19 +39,6 @@ bool are_buttons_pressed(const gpio_num_t *pins, size_t count,
     return true;
 }
 
-bool is_button_pressed(gpio_num_t pin, TickType_t delay_ticks) {
-    TickType_t start_time = xTaskGetTickCount();
-
-    while ((xTaskGetTickCount() - start_time) < delay_ticks) {
-        if (gpio_get_level(pin) == 0) {
-            return true;
-        }
-        vTaskDelay(pdMS_TO_TICKS(10));
-    }
-
-    return false;
-}
-
 void simultaneous_button_task(TaskHandle_t task_to_cut) {
     const gpio_num_t monitored_buttons[] = {HOURS_PUSHBUTTON_GPIO_PIN,
                                             MINUTES_PUSHBUTTON_GPIO_PIN,

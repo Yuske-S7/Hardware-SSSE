@@ -1,36 +1,39 @@
 #include "display_timer.h"
 
-void save_dtime(struct dtime *dt) {
-    if (is_button_pressed(HOURS_PUSHBUTTON_GPIO_PIN, pdMS_TO_TICKS(100))) {
-        if (is_button_pressed(PLUS_PUSHBUTTON_GPIO_PIN, pdMS_TO_TICKS(100))) {
-            dt->hours = (dt->hours + 1) % 24;  // Incrémenter les heures
-        } else if (is_button_pressed(MINUS_PUSHBUTTON_GPIO_PIN,
-                                     pdMS_TO_TICKS(100))) {
-            dt->hours = (dt->hours == 0)
-                            ? 23
-                            : dt->hours - 1;  // Décrémenter les heures
+#define DISPLAY_TIMER_INTERVAL_MS 300
+
+void save_dtime_hours(struct dtime *dt, bool is_increment) {
+    if (is_increment) {
+        dt->hours = (dt->hours + 1) % 24;
+    } else {
+        if (dt->hours == 0) {
+            dt->hours = 23;
+        } else {
+            dt->hours--;
         }
     }
+}
 
-    if (is_button_pressed(MINUTES_PUSHBUTTON_GPIO_PIN, pdMS_TO_TICKS(100))) {
-        if (is_button_pressed(PLUS_PUSHBUTTON_GPIO_PIN, pdMS_TO_TICKS(100))) {
-            dt->minutes = (dt->minutes + 1) % 60;  // Incrémenter les minutes
-        } else if (is_button_pressed(MINUS_PUSHBUTTON_GPIO_PIN,
-                                     pdMS_TO_TICKS(100))) {
-            dt->minutes = (dt->minutes == 0)
-                              ? 59
-                              : dt->minutes - 1;  // Décrémenter les minutes
+void save_dtime_minutes(struct dtime *dt, bool is_increment) {
+    if (is_increment) {
+        dt->minutes = (dt->minutes + 1) % 60;
+    } else {
+        if (dt->minutes == 0) {
+            dt->minutes = 59;
+        } else {
+            dt->minutes--;
         }
     }
+}
 
-    if (is_button_pressed(SECONDS_PUSHBUTTON_GPIO_PIN, pdMS_TO_TICKS(100))) {
-        if (is_button_pressed(PLUS_PUSHBUTTON_GPIO_PIN, pdMS_TO_TICKS(100))) {
-            dt->seconds = (dt->seconds + 1) % 60;  // Incrémenter les secondes
-        } else if (is_button_pressed(MINUS_PUSHBUTTON_GPIO_PIN,
-                                     pdMS_TO_TICKS(100))) {
-            dt->seconds = (dt->seconds == 0)
-                              ? 59
-                              : dt->seconds - 1;  // Décrémenter les secondes
+void save_dtime_seconds(struct dtime *dt, bool is_increment) {
+    if (is_increment) {
+        dt->seconds = (dt->seconds + 1) % 60;
+    } else {
+        if (dt->seconds == 0) {
+            dt->seconds = 59;
+        } else {
+            dt->seconds--;
         }
     }
 }
@@ -45,7 +48,7 @@ void simultaneous_button_time_setting(void *pvParameters, struct dtime *dt) {
         if (are_buttons_pressed(monitored_buttons, monitored_count,
                                 pdMS_TO_TICKS(300))) {
             printf("Entering time setting mode\n");
-            save_dtime(dt);
+            save_dtime_hours(dt, true);
         }
         vTaskDelay(pdMS_TO_TICKS(50));
     }

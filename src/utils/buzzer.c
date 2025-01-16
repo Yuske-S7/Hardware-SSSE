@@ -49,28 +49,28 @@ int buzzer_stop() {
     return 0;
 }
 
- void buzzer_play_imperial_march(void) {
-     int wholenote = (60000 * 4) / TEMPO;
-     int divider = 0, noteDuration = 0;
+void buzzer_play_imperial_march(void) {
+    int wholenote = (60000 * 4) / TEMPO;
+    int divider = 0, noteDuration = 0;
 
-     for (int thisNote = 0; thisNote < notes * 2; thisNote += 2) {
-         divider = melody[thisNote + 1];
-         if (divider > 0) {
-             noteDuration = wholenote / divider;
-         } else if (divider < 0) {
-             noteDuration = (wholenote / -divider) * 1.5;
-         }
+    for (int thisNote = 0; thisNote < notes * 2; thisNote += 2) {
+        divider = melody[thisNote + 1];
+        if (divider > 0) {
+            noteDuration = wholenote / divider;
+        } else if (divider < 0) {
+            noteDuration = (wholenote / -divider) * 1.5;
+        }
 
-         if (melody[thisNote] == REST) {
-             buzzer_stop();
-         } else {
-             ledc_set_freq(LEDC_LOW_SPEED_MODE, LEDC_TIMER_0,
-             melody[thisNote]); ledc_set_duty(LEDC_LOW_SPEED_MODE,
-             LEDC_CHANNEL_0, 4096); ledc_update_duty(LEDC_LOW_SPEED_MODE,
-             LEDC_CHANNEL_0); vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.9));
-             buzzer_stop();
-         }
+        if (melody[thisNote] == REST) {
+            buzzer_stop();
+        } else {
+            ledc_set_freq(LEDC_LOW_SPEED_MODE, LEDC_TIMER_0, melody[thisNote]);
+            ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 4096);
+            ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
+            vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.9));
+            buzzer_stop();
+        }
 
-         vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.1));
-     }
- }
+        vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.1));
+    }
+}
