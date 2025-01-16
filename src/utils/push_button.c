@@ -114,6 +114,7 @@ void simultaneous_button_task_mode_test(void *pvParameters) {
                 segment_display_char(LATCH_FOURTH, '.');
                 segment_display_char(LATCH_FIFTH, '.');
                 segment_display_char(LATCH_SIXTH, '.');
+                xTaskCreate(entry_normal_mode, "noraml mode from test", 2048, NULL, 5, NULL);
                 printf("lancer le mode normal");
             }
         }
@@ -126,4 +127,6 @@ void trigger_timer(TaskHandle_t xBUZZER_HANDLER) {
                       sizeof(button_pins) / sizeof(button_pins[0]));
 
     simultaneous_button_task(xBUZZER_HANDLER);
+    xTaskCreate(entry_normal_mode, "noraml mode from normal", 2048, NULL, 5, NULL);
+    vTaskDelete(NULL);
 }

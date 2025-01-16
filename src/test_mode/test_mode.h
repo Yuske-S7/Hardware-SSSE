@@ -4,6 +4,7 @@
 #include "../utils/buzzer.h"
 #include "../utils/push_button.h"
 #include "../utils/segments.h"
+#include "../normal_mode/normal_mode.h"
 
 #define DELAY_MS 200
 
