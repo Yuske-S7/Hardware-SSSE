@@ -7,6 +7,6 @@
 #include "../utils/segments.h"
 
 void entry_normal_mode(void *parameters);
-void time_setting();
+void time_setting(struct dtime *t);
 
 #endif  // NORMAL_MODE_H

@@ -26,5 +26,6 @@ void app_main(void) {
     // buzzer_play_imperial_march();
 
     /* ========---======== NORMAL MODE ========---======== */
-    time_setting();
+    struct dtime t = {1, 1, 1};
+    time_setting(&t);
 }

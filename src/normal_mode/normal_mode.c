@@ -5,16 +5,15 @@ void entry_normal_mode(void *parameters) {
     vTaskDelete(NULL);
 }
 
-void time_setting() {
-    struct dtime t = {1, 1, 1};
+void time_setting(struct dtime *t) {
     while (1) {
-        save_dtime_hours(&t, true);
+        save_dtime_hours(t, true);
         vTaskDelay(pdMS_TO_TICKS(1000));
-        save_dtime_minutes(&t, true);
+        save_dtime_minutes(t, true);
         vTaskDelay(pdMS_TO_TICKS(1000));
-        save_dtime_seconds(&t, true);
+        save_dtime_seconds(t, true);
         vTaskDelay(pdMS_TO_TICKS(1000));
 
-        printf("%02d:%02d:%02d\n", t.hours, t.minutes, t.seconds);
+        printf("%02d:%02d:%02d\n", t->hours, t->minutes, t->seconds);
     }
 }
