@@ -73,4 +73,5 @@ void buzzer_play_imperial_march(void) {
 
         vTaskDelay(pdMS_TO_TICKS(noteDuration * 0.1));
     }
+    vTaskDelete(NULL);
 }

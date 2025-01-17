@@ -120,6 +120,24 @@ void simultaneous_button_task_mode_test(void *pvParameters) {
     }
 }
 
+void simultaneous_button_task_mode_song(void *pvParameters) {
+    TaskHandle_t task_to_cut = (TaskHandle_t)pvParameters;
+    const gpio_num_t monitored_buttons[] = {PLUS_PUSHBUTTON_GPIO_PIN,
+                                            MINUTES_PUSHBUTTON_GPIO_PIN};
+    size_t monitored_count =
+        sizeof(monitored_buttons) / sizeof(monitored_buttons[0]);
+
+    while (1) {
+        if (are_buttons_pressed(monitored_buttons, monitored_count,
+                                100 / portTICK_PERIOD_MS)) {
+                xTaskCreate(buzzer_play_imperial_march, "modification de l'heure", 2048,
+                            NULL, 1, NULL);
+                vTaskDelete(NULL);
+        }
+        vTaskDelay(50 / portTICK_PERIOD_MS);
+    }
+}
+
 void trigger_timer(void *pvParameters) {
     TaskHandle_t xBUZZER_HANDLER = (TaskHandle_t)pvParameters;
     configure_buttons(button_pins,

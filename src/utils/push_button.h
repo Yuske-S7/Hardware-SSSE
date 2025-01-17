@@ -6,6 +6,7 @@
 #include <freertos/queue.h>
 #include <freertos/task.h>
 #include <stdio.h>
+#include "buzzer.h"
 
 #define SECONDS_PUSHBUTTON_GPIO_PIN 35
 #define MINUTES_PUSHBUTTON_GPIO_PIN 36
@@ -24,5 +25,6 @@ void trigger_timer(void *pvParameters);
 void simultaneous_button_task_mode_test(void *pvParameters);
 bool are_buttons_pressed(const gpio_num_t *pins, size_t count,
                          TickType_t delay_ticks);
+void simultaneous_button_task_mode_song(void *pvParameters);
 
 #endif  // PUSHBUTTON_H
