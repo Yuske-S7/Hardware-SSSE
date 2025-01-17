@@ -6,14 +6,9 @@ void entry_normal_mode(void *parameters) {
 }
 
 void time_setting(struct dtime *t) {
-    while (1) {
-        save_dtime_hours(t, true);
-        vTaskDelay(pdMS_TO_TICKS(1000));
-        save_dtime_minutes(t, true);
-        vTaskDelay(pdMS_TO_TICKS(1000));
-        save_dtime_seconds(t, true);
-        vTaskDelay(pdMS_TO_TICKS(1000));
-
-        printf("%02d:%02d:%02d\n", t->hours, t->minutes, t->seconds);
+    while (true) {
+        clock_increment(t);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        print_time_display(t);
     }
 }

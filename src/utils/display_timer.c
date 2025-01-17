@@ -38,18 +38,28 @@ void save_dtime_seconds(struct dtime *dt, bool is_increment) {
     }
 }
 
-void simultaneous_button_time_setting(void *pvParameters, struct dtime *dt) {
-    const gpio_num_t monitored_buttons[] = {PLUS_PUSHBUTTON_GPIO_PIN,
-                                            MINUS_PUSHBUTTON_GPIO_PIN};
-    const size_t monitored_count =
-        sizeof(monitored_buttons) / sizeof(monitored_buttons[0]);
+void print_time_display(struct dtime *dt) {
+    const int *latches = get_latch_gpios();
 
-    while (1) {
-        if (are_buttons_pressed(monitored_buttons, monitored_count,
-                                pdMS_TO_TICKS(300))) {
-            printf("Entering time setting mode\n");
-            save_dtime_hours(dt, true);
-        }
-        vTaskDelay(pdMS_TO_TICKS(50));
+    segment_display_digit(latches[5], dt->hours / 10);
+    segment_display_digit(latches[4], dt->hours % 10);
+
+    segment_display_digit(latches[3], dt->minutes / 10);
+    segment_display_digit(latches[2], dt->minutes % 10);
+
+    segment_display_digit(latches[1], dt->seconds / 10);
+    segment_display_digit(latches[0], dt->seconds % 10);
+}
+
+void clock_increment(struct dtime *dt) {
+    if (dt->seconds != 59) {
+        save_dtime_seconds(dt, true);
+    } else if (dt->minutes != 59) {
+        save_dtime_minutes(dt, true);
+        dt->seconds = 0;
+    } else {
+        save_dtime_hours(dt, true);
+        dt->seconds = 0;
+        dt->minutes = 0;
     }
 }
